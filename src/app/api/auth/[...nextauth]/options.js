@@ -1,6 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
+import clientPromise from "../../../../../lib/mongo/mongodb";
 
 export const options = {
   providers: [
@@ -27,6 +28,7 @@ export const options = {
         // to verify with credentials
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
+
         const user = { id: "31", name: "Gabe", password: "asdfjkl;" };
         if (
           credentials?.username === user.name &&
@@ -36,6 +38,17 @@ export const options = {
         } else {
           return null;
         }
+
+        // const client = await clientPromise;
+        // const usersCollection = client
+        //   .db("users")
+        //   .collection("user");
+        // const user = credentials?.user.toLowerCase();
+        // const findUser = await usersCollection.findOne({ user });
+        // if (!findUser) {
+        //   throw new Error("User does not exist.");
+        // }
+        // console.log
       },
     }),
   ],
