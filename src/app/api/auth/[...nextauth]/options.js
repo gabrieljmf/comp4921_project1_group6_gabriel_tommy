@@ -28,10 +28,14 @@ export const options = {
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
         const user = { id: "31", name: "Gabe", password: "asdfjkl;" };
-        credentials?.username === user.name &&
-        credentials?.password === user.password
-          ? user
-          : null;
+        if (
+          credentials?.username === user.name &&
+          credentials?.password === user.password
+        ) {
+          return user;
+        } else {
+          return null;
+        }
       },
     }),
   ],
