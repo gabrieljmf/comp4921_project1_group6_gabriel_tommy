@@ -1,4 +1,3 @@
-import { NextAuthOptions } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -12,14 +11,14 @@ export const options = {
       name: "Credentials",
       credentials: {
         username: {
-          label: "Username",
+          label: "Username: ",
           type: "text",
           placeholder: "nerdslayee0",
         },
         password: {
-          label: "Password",
+          label: "Password: ",
           type: "text",
-          placeholder: "none",
+          placeholder: "",
         },
       },
       async authorize(credentials) {
@@ -27,14 +26,32 @@ export const options = {
         // to verify with credentials
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
-        const user = { id: "31", name: "Gabe", password: "asdfjkl;" };
-        credentials?.username === user.name &&
-        credentials?.password === user.password
-          ? user
-          : null;
+        const user = {
+          id: "31",
+          name: "gabrielfair@hotmail.com",
+          password: "B4ssf@ce",
+        };
+
+        // TODO: add database address here
+        // const res = await fetch("/enter/database/here", {
+        //   method: "POST",
+        //   body: JSON.stringify(credentials),
+        //   headers: { "Content-Type": "application/json" },
+        // });
+        // const user = await res.json();
+
+        if (
+          credentials?.username === user.name &&
+          credentials?.password === user.password
+        ) {
+          return user;
+        } else {
+          return null;
+        }
       },
     }),
   ],
+  // TODO: Session data
   pages: {
     session: {
       strategy: "database",
