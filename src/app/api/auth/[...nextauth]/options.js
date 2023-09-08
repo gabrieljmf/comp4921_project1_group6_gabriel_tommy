@@ -29,7 +29,7 @@ export const options = {
         const user = {
           id: "31",
           name: "gabrielfair@hotmail.com",
-          password: "B4ssf@ce",
+          password: "asdf",
         };
 
         // TODO: add database address here
