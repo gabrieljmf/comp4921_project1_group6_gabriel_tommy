@@ -3,6 +3,10 @@ import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../../../../lib/mongo/mongodb";
 
+let db;
+let client;
+let users;
+
 export const options = {
   providers: [
     GitHubProvider({
@@ -29,6 +33,27 @@ export const options = {
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
 
+        if (!db) {
+          try {
+            client = await clientPromise;
+            db = await client.db();
+            users = await db.collection("users");
+            console.log("Sup");
+          } catch (error) {
+            throw new Error("Failed to establish connection to database");
+          }
+        }
+
+        // const usersCollection = client.db("users").collection("user");
+        // const user = credentials?.user.toLowerCase();
+        // const findUser = await usersCollection.findOne({ user });
+        // if (!findUser) {
+        //   console.log("Not Found!");
+        // } else {
+        //   console.log("Found it!");
+        //   console.log(findUser);
+        // }
+
         const user = { id: "31", name: "Gabe", password: "asdfjkl;" };
         if (
           credentials?.username === user.name &&
@@ -38,17 +63,6 @@ export const options = {
         } else {
           return null;
         }
-
-        // const client = await clientPromise;
-        // const usersCollection = client
-        //   .db("users")
-        //   .collection("user");
-        // const user = credentials?.user.toLowerCase();
-        // const findUser = await usersCollection.findOne({ user });
-        // if (!findUser) {
-        //   throw new Error("User does not exist.");
-        // }
-        // console.log
       },
     }),
   ],
