@@ -19,6 +19,9 @@ export default function Home() {
         <Button>
           <Link href="/landing">Go to Landing</Link>
         </Button>
+        <Button>
+          <Link href="/signUp">Sign Up!</Link>
+        </Button>
       </main>
     </>
   );
