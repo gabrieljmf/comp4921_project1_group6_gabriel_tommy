@@ -5,7 +5,6 @@ import clientPromise from "../../../../../lib/mongo/mongodb";
 
 let db;
 let client;
-let users;
 
 export const options = {
   providers: [
@@ -33,32 +32,21 @@ export const options = {
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
 
+        let user;
+
         if (!db) {
           try {
             client = await clientPromise;
-            db = await client.db();
-            users = await db.collection("users");
-            console.log("Sup");
+            db = await client.db("users");
+            user = await db
+              .collection("user")
+              .findOne({ user: credentials?.username });
           } catch (error) {
             throw new Error("Failed to establish connection to database");
           }
         }
 
-        // const usersCollection = client.db("users").collection("user");
-        // const user = credentials?.user.toLowerCase();
-        // const findUser = await usersCollection.findOne({ user });
-        // if (!findUser) {
-        //   console.log("Not Found!");
-        // } else {
-        //   console.log("Found it!");
-        //   console.log(findUser);
-        // }
-
-        const user = { id: "31", name: "Gabe", password: "asdfjkl;" };
-        if (
-          credentials?.username === user.name &&
-          credentials?.password === user.password
-        ) {
+        if (credentials?.password === user.password) {
           return user;
         } else {
           return null;
