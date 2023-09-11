@@ -1,7 +1,7 @@
 import { Form, FormLayout, Field, SubmitButton } from "@saas-ui/forms";
 import React from "react";
-import mongoose from "mongoose";
-import user from "../../models/user";
+// import mongoose from "mongoose";
+// import user from "../../models/user";
 // import CreateCredentials from "./createUser";
 
 export default function signUp() {

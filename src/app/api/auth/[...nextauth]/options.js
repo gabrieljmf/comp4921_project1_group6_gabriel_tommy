@@ -28,7 +28,6 @@ export const options = {
       },
       async authorize(credentials) {
         let dbUser;
-        // TODO: is it supposed to be "db!" or just "db"?
         if (!db) {
           try {
             client = await clientPromise;
@@ -54,27 +53,27 @@ export const options = {
   // pages: {
   //   signUp: "/signUp",
   // },
-  session: {
-    // jwt: true,
-    strategy: "jwt",
-    // maxAge: 60 * 60,
-    // updateAge: 60 * 60,
-    // generateSessionToken: () => {
-    //   return randomUUID?.() ?? randomBytes(32).toString("hex");
-    // },
-  },
-  callbacks: {
-    async session(session, token) {
-      session.user = token.user;
-      return session;
-    },
-    async jwt(token) {
-      if (typeof user !== typeof undefined) {
-        token.user = username;
-      }
-      return token;
-    },
-  },
+  // session: {
+  //   // jwt: true,
+  //   strategy: "jwt",
+  //   // maxAge: 60 * 60,
+  //   // updateAge: 60 * 60,
+  //   // generateSessionToken: () => {
+  //   //   return randomUUID?.() ?? randomBytes(32).toString("hex");
+  //   // },
+  // },
+  // callbacks: {
+  //   async session(session, token) {
+  //     session.user = token.user;
+  //     return session;
+  //   },
+  //   async jwt(token) {
+  //     if (typeof user !== typeof undefined) {
+  //       token.user = username;
+  //     }
+  //     return token;
+  //   },
+  // },
 };
 
 export default NextAuth(options);
