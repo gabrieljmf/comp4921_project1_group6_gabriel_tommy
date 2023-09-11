@@ -1,28 +1,36 @@
-import Head from "next/head";
+import { Center, useColorMode } from "@chakra-ui/react";
 import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
+function ColorToggler() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  return (
+    <Center>
+      <Button onClick={toggleColorMode}>
+        Toggle {colorMode === "light" ? "Dark" : "Light"}
+      </Button>
+    </Center>
+  );
+}
+
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>COMP 4721 Project 1 by Gabriel and Tommy</title>
-        <meta name="description" content="assignment by Patrick Guichon" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={`${styles.main} ${inter.className}`}>
+      {/* <main className={`${styles.main} ${inter.className}`}> */}
+      <Center margin={4}>
         <Button>
           <Link href="/landing">Go to Landing</Link>
         </Button>
+      </Center>
+      <Center margin={4}>
         <Button>
           <Link href="/signUp">Sign Up!</Link>
         </Button>
-      </main>
+      </Center>
+      <ColorToggler />
     </>
   );
 }
