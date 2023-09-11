@@ -29,13 +29,13 @@ export const options = {
       async authorize(credentials) {
         let dbUser;
         // TODO: is it supposed to be "db!" or just "db"?
-        if (db) {
+        if (!db) {
           try {
             client = await clientPromise;
-            db = await client.db("users");
+            db = await client.db("4921-project1");
             dbUser = await db
-              .collection("user")
-              .findOne({ user: credentials?.username });
+              .collection("users")
+              .findOne({ username: credentials?.username });
             // .select("+password");
           } catch (error) {
             throw new Error("Failed to establish connection to database");
@@ -50,6 +50,10 @@ export const options = {
       },
     }),
   ],
+  //TODO: Pages --> sign up
+  // pages: {
+  //   signUp: "/signUp",
+  // },
   session: {
     // jwt: true,
     strategy: "jwt",
