@@ -32,22 +32,23 @@ export const options = {
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
 
-        let user;
+        let userAuthData;
 
         if (!db) {
           try {
             client = await clientPromise;
             db = await client.db("users");
-            user = await db
+            userAuthData = await db
               .collection("user")
               .findOne({ user: credentials?.username });
+            // .select("+password");
           } catch (error) {
             throw new Error("Failed to establish connection to database");
           }
         }
 
-        if (credentials?.password === user.password) {
-          return user;
+        if (credentials?.password === userAuthData.password) {
+          return userAuthData;
         } else {
           return null;
         }
@@ -58,7 +59,7 @@ export const options = {
     session: {
       strategy: "database",
       maxAge: 60 * 60,
-      updateAge: 24 * 60 * 60,
+      updateAge: 60 * 60,
       generateSessionToken: () => {
         return randomUUID?.() ?? randomBytes(32).toString("hex");
       },

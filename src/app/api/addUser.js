@@ -4,11 +4,11 @@ export default async (req, res) => {
   try {
     const client = await clientPromise;
     const db = client.db("users");
-    const { user, password } = req.body;
+    const { userName, userPassword } = req.body;
 
     const post = await db.collection("user").insertOne({
-      user,
-      password,
+      username,
+      userPassword,
     });
 
     res.json(post);
