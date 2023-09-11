@@ -1,7 +1,10 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../../../../lib/mongo/mongodb";
+
+let db;
+let client;
 
 export const options = {
   providers: [
@@ -24,52 +27,56 @@ export const options = {
         },
       },
       async authorize(credentials) {
-        // This is where you retrieve user data
-        // to verify with credentials
-        // Docs: https://next-auth.js.org/configuration/providers/credentials
-        // TODO: add this test user to database to test auth
+        let dbUser;
+        // TODO: is it supposed to be "db!" or just "db"?
+        if (db) {
+          try {
+            client = await clientPromise;
+            db = await client.db("users");
+            dbUser = await db
+              .collection("user")
+              .findOne({ user: credentials?.username });
+            // .select("+password");
+          } catch (error) {
+            throw new Error("Failed to establish connection to database");
+          }
+        }
 
-        const user = { id: "31", name: "Gabe", password: "asdfjkl;" };
-        if (
-          credentials?.username === user.name &&
-          credentials?.password === user.password
-        ) {
-          return user;
+        if (credentials?.password === dbUser.password) {
+          return dbUser;
         } else {
           return null;
         }
-
-        // const client = await clientPromise;
-        // const usersCollection = client
-        //   .db("users")
-        //   .collection("user");
-        // const user = credentials?.user.toLowerCase();
-        // const findUser = await usersCollection.findOne({ user });
-        // if (!findUser) {
-        //   throw new Error("User does not exist.");
-        // }
-        // console.log
       },
     }),
   ],
-  pages: {
-    session: {
-      strategy: "database",
-      maxAge: 60 * 60,
-      updateAge: 24 * 60 * 60,
-      generateSessionToken: () => {
-        return randomUUID?.() ?? randomBytes(32).toString("hex");
-      },
+  session: {
+    // jwt: true,
+    strategy: "jwt",
+    // maxAge: 60 * 60,
+    // updateAge: 60 * 60,
+    // generateSessionToken: () => {
+    //   return randomUUID?.() ?? randomBytes(32).toString("hex");
+    // },
+  },
+  callbacks: {
+    async session(session, token) {
+      session.user = token.user;
+      return session;
+    },
+    async jwt(token) {
+      if (typeof user !== typeof undefined) {
+        token.user = username;
+      }
+      return token;
     },
   },
 };
-// TODO: WIP
 
-// }
+export default NextAuth(options);
 
-//   pages: {
-//   signIn: '/auth/signin',
-//     signOut: '/auth/signout',
-//     error: '/auth/error',
-//     verifyRequest: '/auth/verify-request',
-//       newUser: '/auth/new-user'
+// TODO: https://www.reddit.com/r/nextjs/comments/q02t3y/how_to_send_user_info_in_a_nextauth_session/
+// https://next-auth.js.org/configuration/callbacks#session-callback
+// https://next-auth.js.org/getting-started/example
+// https://stackoverflow.com/questions/73069186/why-cant-i-access-session-data-that-exists-before-the-return-statement-in-nextj
+// can't log in with git hub because there is no user based on the github user/pw info
