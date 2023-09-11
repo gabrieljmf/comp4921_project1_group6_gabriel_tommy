@@ -1,9 +1,6 @@
 import { Center, useColorMode } from "@chakra-ui/react";
-import { Inter } from "next/font/google";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
-
-const inter = Inter({ subsets: ["latin"] });
 
 function ColorToggler() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -19,7 +16,6 @@ function ColorToggler() {
 export default function Home() {
   return (
     <>
-      {/* <main className={`${styles.main} ${inter.className}`}> */}
       <Center margin={4}>
         <Button>
           <Link href="/landing">Go to Landing</Link>

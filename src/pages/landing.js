@@ -1,5 +1,5 @@
 import { Heading } from "@chakra-ui/react";
-import { signOut } from "next-auth/react";
+import { SessionContext, signOut } from "next-auth/react";
 import { Button } from "@chakra-ui/react";
 // import { options } from "@/app/api/auth/[...nextauth]/options";
 // import { getServerSession } from "next-auth/next";
@@ -13,7 +13,7 @@ const landing = () => {
   // }
   return (
     <>
-      <Heading>Welcome! </Heading>
+      <Heading>Welcome! {SessionContext.timestamp}</Heading>
       <Button onClick={() => signOut()}>Sign Out</Button>
     </>
   );
