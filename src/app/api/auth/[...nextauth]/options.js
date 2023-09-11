@@ -27,13 +27,9 @@ export const options = {
         },
       },
       async authorize(credentials) {
-        // This is where you retrieve user data
-        // to verify with credentials
-        // Docs: https://next-auth.js.org/configuration/providers/credentials
-        // TODO: add this test user to database to test auth
-
         let dbUser;
-        if (!db) {
+        // TODO: is it supposed to be "db!" or just "db"?
+        if (db) {
           try {
             client = await clientPromise;
             db = await client.db("users");
@@ -55,8 +51,8 @@ export const options = {
     }),
   ],
   session: {
-    jwt: true,
-    // strategy: "database",
+    // jwt: true,
+    strategy: "jwt",
     // maxAge: 60 * 60,
     // updateAge: 60 * 60,
     // generateSessionToken: () => {
@@ -65,12 +61,12 @@ export const options = {
   },
   callbacks: {
     async session(session, token) {
-      session.username = token.username;
+      session.user = token.user;
       return session;
     },
     async jwt(token) {
       if (typeof user !== typeof undefined) {
-        token.username = username;
+        token.user = username;
       }
       return token;
     },
@@ -83,3 +79,4 @@ export default NextAuth(options);
 // https://next-auth.js.org/configuration/callbacks#session-callback
 // https://next-auth.js.org/getting-started/example
 // https://stackoverflow.com/questions/73069186/why-cant-i-access-session-data-that-exists-before-the-return-statement-in-nextj
+// can't log in with git hub because there is no user based on the github user/pw info
