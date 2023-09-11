@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../../../../lib/mongo/mongodb";
@@ -32,13 +32,12 @@ export const options = {
         // Docs: https://next-auth.js.org/configuration/providers/credentials
         // TODO: add this test user to database to test auth
 
-        let userAuthData;
-
+        let dbUser;
         if (!db) {
           try {
             client = await clientPromise;
             db = await client.db("users");
-            userAuthData = await db
+            dbUser = await db
               .collection("user")
               .findOne({ user: credentials?.username });
             // .select("+password");
@@ -47,32 +46,40 @@ export const options = {
           }
         }
 
-        if (credentials?.password === userAuthData.password) {
-          return userAuthData;
+        if (credentials?.password === dbUser.password) {
+          return dbUser;
         } else {
           return null;
         }
       },
     }),
   ],
-  pages: {
-    session: {
-      strategy: "database",
-      maxAge: 60 * 60,
-      updateAge: 60 * 60,
-      generateSessionToken: () => {
-        return randomUUID?.() ?? randomBytes(32).toString("hex");
-      },
+  session: {
+    jwt: true,
+    // strategy: "database",
+    // maxAge: 60 * 60,
+    // updateAge: 60 * 60,
+    // generateSessionToken: () => {
+    //   return randomUUID?.() ?? randomBytes(32).toString("hex");
+    // },
+  },
+  callbacks: {
+    async session(session, token) {
+      session.username = token.username;
+      return session;
+    },
+    async jwt(token) {
+      if (typeof user !== typeof undefined) {
+        token.username = username;
+      }
+      return token;
     },
   },
 };
-// TODO: WIP
 
-// }
+export default NextAuth(options);
 
-//   pages: {
-//   signIn: '/auth/signin',
-//     signOut: '/auth/signout',
-//     error: '/auth/error',
-//     verifyRequest: '/auth/verify-request',
-//       newUser: '/auth/new-user'
+// TODO: https://www.reddit.com/r/nextjs/comments/q02t3y/how_to_send_user_info_in_a_nextauth_session/
+// https://next-auth.js.org/configuration/callbacks#session-callback
+// https://next-auth.js.org/getting-started/example
+// https://stackoverflow.com/questions/73069186/why-cant-i-access-session-data-that-exists-before-the-return-statement-in-nextj
