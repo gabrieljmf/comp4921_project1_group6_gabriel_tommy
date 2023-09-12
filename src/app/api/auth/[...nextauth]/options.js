@@ -2,13 +2,22 @@ import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import clientPromise from "../../../../../lib/mongo/mongodb";
-
+import { GithubProfile } from "next-auth/providers/github";
 let db;
 let client;
 
 export const options = {
   providers: [
     GitHubProvider({
+      profile(profile) {
+        console.log(profile);
+        return {
+          ...profile, //gets everything from the GH profile
+          role: profile.role ?? "user",
+          id: profile.id.toString(),
+          // image: profile.avatar_url,
+        };
+      },
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
@@ -54,7 +63,7 @@ export const options = {
   //   signUp: "/signUp",
   // },
   session: {
-    // jwt: true,
+    jwt: true,
     strategy: "jwt",
     // maxAge: 60 * 60,
     // updateAge: 60 * 60,
@@ -63,16 +72,24 @@ export const options = {
     // },
   },
   callbacks: {
-    async session(session, token) {
-      session.user = token.user;
-      return session;
-    },
-    async jwt(token) {
-      if (typeof user !== typeof undefined) {
-        token.user = username;
-      }
+    async jwt({ token, user }) {
+      if (user) token.role = user.role;
       return token;
     },
+    async session({ session, token }) {
+      if (session?.user) session.user.role = token.role;
+      return session;
+    },
+    // async session(session, token) {
+    //   session.user = token.user;
+    //   return session;
+    // },
+    // async jwt(token) {
+    //   if (typeof user !== typeof undefined) {
+    //     token.user = username;
+    //   }
+    //   return token;
+    // },
   },
 };
 
