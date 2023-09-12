@@ -6,22 +6,22 @@ import options from "@/app/api/auth/[...nextauth]/options";
 import { Button } from "@chakra-ui/react";
 
 async function Landing() {
-  const session = await getServerSession(options);
+  // const session = await getServerSession(options);
   // const session = getToken();
   // const landing = () => {
   // const session = getServerSession(options);
   // if (!session) {
   //   redirect("api/auth/signin?callbackUrl=/landing");
   // }
-  console.log(session);
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user} <br />
-        <Button onClick={() => signOut()}>Sign out</Button>
-      </>
-    );
-  }
+  // console.log(session);
+  // if (session) {
+  //   return (
+  //     <>
+  //       Signed in as {session.user} <br />
+  //       <Button onClick={() => signOut()}>Sign out</Button>
+  //     </>
+  //   );
+  // }
   return (
     <>
       Not signed in <br />
