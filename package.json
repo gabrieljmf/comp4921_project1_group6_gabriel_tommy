@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@saas-ui/forms": "^2.0.5",
+    "bcryptjs": "^2.4.3",
     "framer-motion": "^10.16.4",
     "mongodb": "^3.7.4",
     "mongoose": "^7.5.1",

@@ -1,10 +1,12 @@
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import clientPromise from "../../../../../lib/mongo/mongodb";
+import connectMongoDB from "../../../../../lib/mongo/mongoose";
+import User from "../../../../../models/user";
+import bcrypt from "bcryptjs";
 
-let db;
 let client;
+const saltRounds = 12;
 
 export const options = {
   providers: [
@@ -28,20 +30,19 @@ export const options = {
       },
       async authorize(credentials) {
         let dbUser;
-        if (!db) {
+        if (!client) {
           try {
-            client = await clientPromise;
-            db = await client.db("4921-project1");
-            dbUser = await db
-              .collection("users")
-              .findOne({ username: credentials?.username });
+            client = await connectMongoDB();
+            dbUser = await User.findOne({
+              username: credentials?.username,
+            });
             // .select("+password");
           } catch (error) {
             throw new Error("Failed to establish connection to database");
           }
         }
 
-        if (credentials?.password === dbUser.password) {
+        if (bcrypt.compareSync(credentials?.password, dbUser.password)) {
           return dbUser;
         } else {
           return null;
