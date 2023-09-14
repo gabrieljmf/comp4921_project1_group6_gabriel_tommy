@@ -1,21 +1,16 @@
-import connectMongoDB from "../../../lib/mongo/mongoose";
-import User from "../../../models/user";
 import bcrypt from "bcryptjs";
+import clientPromise from "../../../lib/mongo/mongodb";
 
 export default async function handler(req, res) {
-  await connectMongoDB();
+  const client = await clientPromise;
+  const db = client.db("userList");
   if (req.method === "POST") {
     const { username, password } = req.body;
     const saltRounds = 12;
-
-    // Verify if user exist
-    // Verify if password is valid
-
-    // Encrypt Password
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    User.create({ username, password: hashedPassword });
-
+    let myPost = await db
+      .collection("users")
+      .insertOne({ username, password: hashedPassword });
     return res.status(201).json();
   } else {
     res.status(405);

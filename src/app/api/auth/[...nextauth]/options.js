@@ -2,13 +2,19 @@ import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import connectMongoDB from "../../../../../lib/mongo/mongoose";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "../../../../../lib/mongo/mongodb";
 import User from "../../../../../models/user";
 import bcrypt from "bcryptjs";
 
 let client;
+let db;
 const saltRounds = 12;
 
 export const options = {
+  adapter: MongoDBAdapter(clientPromise, {
+    databaseName: "userList",
+  }),
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID,
@@ -30,17 +36,19 @@ export const options = {
       },
       async authorize(credentials) {
         let dbUser;
-        if (!client) {
+        if (!db) {
           try {
-            client = await connectMongoDB();
-            dbUser = await User.findOne({
-              username: credentials?.username,
-            });
-            // .select("+password");
+            client = await clientPromise;
+            db = await client.db("userList");
+            dbUser = await db
+              .collection("users")
+              .findOne({ username: credentials?.username });
           } catch (error) {
-            throw new Error("Failed to establish connection to database");
+            return null;
           }
         }
+        console.log(credentials?.password);
+        console.log(dbUser);
 
         if (bcrypt.compareSync(credentials?.password, dbUser.password)) {
           return dbUser;

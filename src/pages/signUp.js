@@ -26,9 +26,8 @@ export default function signUp() {
       });
 
       if (res.ok) {
-        const form = e.target;
-        form.reset();
-        router.push("/");
+        router.push("/landing");
+        console.log("Creating User Successful");
       } else {
         console.log("Creating User failed.");
       }
