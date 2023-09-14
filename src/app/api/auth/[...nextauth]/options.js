@@ -1,10 +1,8 @@
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
-import connectMongoDB from "../../../../../lib/mongo/mongoose";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../../../lib/mongo/mongodb";
-import User from "../../../../../models/user";
 import bcrypt from "bcryptjs";
 
 let client;
