@@ -53,7 +53,7 @@ export default function signUp() {
   return (
     <Flex
       width={"100vw"}
-      height={"100vh"}
+      height={"80vh"}
       alignContent={"center"}
       justifyContent={"center"}
       bg="#161b22"
