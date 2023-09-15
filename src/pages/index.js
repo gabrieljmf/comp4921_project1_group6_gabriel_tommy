@@ -1,4 +1,4 @@
-import { Center, useColorMode } from "@chakra-ui/react";
+import { Center, Flex, useColorMode } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -15,18 +15,13 @@ function ColorToggler() {
 
 export default function Home() {
   return (
-    <>
+    <Flex justifyContent={"center"}>
       <Center margin={4}>
         <Button>
           <Link href="/landing">Go to Landing</Link>
         </Button>
       </Center>
-      <Center margin={4}>
-        <Button>
-          <Link href="/signUp">Sign Up!</Link>
-        </Button>
-      </Center>
       <ColorToggler />
-    </>
+    </Flex>
   );
 }
