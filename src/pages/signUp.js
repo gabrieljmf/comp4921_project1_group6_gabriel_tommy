@@ -10,29 +10,38 @@ export default function signUp() {
   const [password, setPassword] = useState("");
 
   const router = useRouter();
-
   const onSubmit = async (e) => {
-    console.log("Hello");
-    try {
-      const res = await fetch("api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          password,
-        }),
-      });
+    var pattern = new RegExp(
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[-+_!@#$%^&*.,?]).+$"
+    );
 
-      if (res.ok) {
-        router.push("/landing");
-        console.log("Creating User Successful");
-      } else {
-        console.log("Creating User failed.");
+    var minLen = 10;
+
+    if (pattern.test(password) && password.length >= minLen) {
+      try {
+        const res = await fetch("api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            password,
+          }),
+        });
+
+        if (res.ok) {
+          router.push("/landing");
+          console.log("Creating User Successful");
+        } else {
+          console.log("Creating User failed.");
+        }
+      } catch (error) {
+        console.log("Error: ", error);
       }
-    } catch (error) {
-      console.log("Error: ", error);
+    } else {
+      // State that the user has invalid password
+      console.log("No");
     }
   };
   return (
