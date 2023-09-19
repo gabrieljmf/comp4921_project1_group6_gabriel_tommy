@@ -22,7 +22,7 @@ export default async function shortenLink(req, res) {
     };
     try {
       const response = await fetch(fetchURL, options);
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 201) {
         const data = await response.json();
         return data.link;
         // return res.status(200).json(data.link);

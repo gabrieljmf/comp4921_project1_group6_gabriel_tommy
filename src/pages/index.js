@@ -27,7 +27,7 @@ function ColorToggler() {
 export default function Home() {
   const [value, setValue] = useState("");
   const [radioValue, setRadioValue] = useState("");
-
+  const [textValue, setTextValue] = useState("");
   const handleChange = (event) => {
     setValue(event.target.value);
     console.log(event.target.value);
@@ -58,6 +58,7 @@ export default function Home() {
         if (response.status === 200) {
           const data = await response.json();
           console.log(data.link);
+          setTextValue(data.link);
         } else {
           console.log(
             "Bitly API request failed:",
@@ -115,6 +116,9 @@ export default function Home() {
               </Button>
             </Stack>
           </RadioGroup>
+        </Center>
+        <Center>
+          <Box>{textValue && "Your Link: " + textValue}</Box>
         </Center>
       </Box>
     </Grid>
