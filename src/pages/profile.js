@@ -1,9 +1,9 @@
 // import { SessionContext, signOut } from "next-auth/react";
-import { useSession, signOut, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 // import { getToken, signOut, signIn } from "next-auth/react";
 import { Button } from "@chakra-ui/react";
 
-const landing = () => {
+const Profile = () => {
   const session = useSession();
   // const session = getToken();
   // const landing = () => {
@@ -16,16 +16,14 @@ const landing = () => {
     return (
       <>
         Signed in as {session.data} <br />
-        <Button onClick={() => signOut()}>Sign out</Button>
       </>
     );
   }
   return (
     <>
       Not signed in <br />
-      <Button onClick={() => signIn()}>Sign in</Button>
     </>
   );
 };
 
-export default landing;
+export default Profile;
