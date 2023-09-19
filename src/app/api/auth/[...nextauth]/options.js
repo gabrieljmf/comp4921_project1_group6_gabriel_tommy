@@ -1,12 +1,19 @@
 import NextAuth from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "../../../../../lib/mongo/mongodb";
 import { GithubProfile } from "next-auth/providers/github";
-let db;
+import bcrypt from "bcryptjs";
+
 let client;
+let db;
+const saltRounds = 12;
 
 export const options = {
+  adapter: MongoDBAdapter(clientPromise, {
+    databaseName: "userList",
+  }),
   providers: [
     GitHubProvider({
       // profile(profile) {
@@ -36,27 +43,22 @@ export const options = {
         },
       },
       async authorize(credentials) {
-        const dbUser = { id: "42", username: "test", password: "asdf" };
-        //TODO: Uncomment code. This is Tommy's working db code
-        // let dbUser;
-        // if (!db) {
-        //   try {
-        //     client = await clientPromise;
-        //     db = await client.db("4921-project1");
-        //     dbUser = await db
-        //       .collection("users")
-        //       .findOne({ username: credentials?.username });
-        //     // .select("+password");
-        //   } catch (error) {
-        //     throw new Error("Failed to establish connection to database");
-        //   }
-        // }
+        let dbUser;
+        if (!db) {
+          try {
+            client = await clientPromise;
+            db = await client.db("userList");
+            dbUser = await db
+              .collection("users")
+              .findOne({ username: credentials?.username });
+          } catch (error) {
+            return null;
+          }
+        }
+        console.log(credentials?.password);
+        console.log(dbUser);
 
-        // if (credentials?.password === dbUser.password) {
-        if (
-          credentials?.username === dbUser?.username &&
-          credentials?.password === dbUser.password
-        ) {
+        if (bcrypt.compareSync(credentials?.password, dbUser.password)) {
           return dbUser;
         } else {
           return null;
