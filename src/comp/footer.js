@@ -50,6 +50,7 @@ export default function Footer() {
       pos="absolute"
       bottom="0"
       width="100%"
+      maxHeight={{ sm: 10, md: 80 }}
     >
       <Container
         as={Stack}
