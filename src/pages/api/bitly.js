@@ -25,7 +25,8 @@ export default async function handler(req, res) {
       const response = await fetch(fetchURL, options);
       if (response.status === 200) {
         const data = await response.json();
-        return res.status(200).json(data);
+        return data.link;
+        // return res.status(200).json(data.link);
       } else {
         console.log(
           "Bitly API request failed:",

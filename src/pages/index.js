@@ -35,9 +35,12 @@ export default function Home() {
   const upload = (event, value, radioValue) => {
     console.log("submitted " + value + " and " + radioValue);
     // WIP
-    // if (radioValue === "text") {
-    //   uploadText(value);
-    // }
+    if (radioValue === "text") {
+      uploadText(value);
+    } else if (radioValue == "link") {
+      const res = shortenLink((req = value));
+      console.log(res);
+    }
   };
   // WIP
   // const uploadText = async (value) => {
