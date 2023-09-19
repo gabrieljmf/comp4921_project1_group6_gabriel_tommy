@@ -1,4 +1,4 @@
-import { Center, Flex, useColorMode } from "@chakra-ui/react";
+import { Box, Center, Flex, Grid, Input, useColorMode } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
@@ -15,13 +15,27 @@ function ColorToggler() {
 
 export default function Home() {
   return (
-    <Flex justifyContent={"center"}>
-      <Center margin={4}>
-        <Button>
-          <Link href="/landing">Go to Landing</Link>
-        </Button>
-      </Center>
-      <ColorToggler />
-    </Flex>
+    <Grid justifyContent={"center"} templateColumns="repeat(3, 1fr)">
+      <Box>
+        <Center margin={4}>
+          <Button>
+            <Link href="/landing">Go to Landing</Link>
+          </Button>
+        </Center>
+      </Box>
+      <Box>
+        <Center margin={4}>
+          <Button>
+            <Link href="/landing">Go to Landing</Link>
+          </Button>
+        </Center>
+      </Box>
+      <Box>
+        <ColorToggler />
+      </Box>
+      <Box gridColumn={(0, 2)}>
+        <Input></Input>
+      </Box>
+    </Grid>
   );
 }
