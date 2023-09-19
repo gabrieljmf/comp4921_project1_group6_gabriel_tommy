@@ -27,7 +27,7 @@ const Header = () => {
       {status === "unauthenticated" && (
         <Center>
           <Button mx={8}>
-            <Link href="/signUp">Sign Up!</Link>
+            <Link href="/signUp">Sign Up</Link>
           </Button>
           <Button onClick={() => signIn()}>Sign in</Button>
         </Center>
