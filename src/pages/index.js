@@ -11,6 +11,7 @@ import {
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
+// import shortenLink from "./api/bitly";
 
 function ColorToggler() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -32,14 +33,43 @@ export default function Home() {
     console.log(event.target.value);
   };
 
-  const upload = (event, value, radioValue) => {
+  const upload = async (event, value, radioValue) => {
     console.log("submitted " + value + " and " + radioValue);
     // WIP
     if (radioValue === "text") {
       uploadText(value);
     } else if (radioValue == "link") {
-      const res = shortenLink((req = value));
-      console.log(res);
+      var fetchURL = "https://api-ssl.bitly.com/v4/shorten";
+      var header = {
+        Authorization: "Bearer 46a145052835cd7b0a9920f73574efa2a0445b9a",
+        "Content-Type": "application/json",
+      };
+      var payload = {
+        domain: "bit.ly",
+        long_url: value,
+      };
+      var options = {
+        method: "POST",
+        headers: header,
+        body: JSON.stringify(payload),
+      };
+      try {
+        const response = await fetch(fetchURL, options);
+        if (response.status === 200) {
+          const data = await response.json();
+          console.log(data.link);
+        } else {
+          console.log(
+            "Bitly API request failed:",
+            response.status,
+            response.statusText
+          );
+          res.status(500).json({ error: "Bitly API request failed" });
+        }
+      } catch (error) {
+        console.error("Error while making Bitly API request:", error);
+        res.status(500).json({ error: "Internal server error" });
+      }
     }
   };
   // WIP

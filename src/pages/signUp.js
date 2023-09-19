@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import shortenLink from "./api/bitly";
 // import mongoose from "mongoose";
 // import user from "../../models/user";
 // import CreateCredentials from "./createUser";

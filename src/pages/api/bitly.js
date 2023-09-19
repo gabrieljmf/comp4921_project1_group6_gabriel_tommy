@@ -1,7 +1,7 @@
 import clientPromise from "../../../lib/mongo/mongodb";
 import fetch from "node-fetch";
 
-export default async function handler(req, res) {
+export default async function shortenLink(req, res) {
   //   const client = await clientPromise;
   //   const database = client.db("bitly");
   if (req.method === "POST") {
